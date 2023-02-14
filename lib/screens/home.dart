@@ -18,7 +18,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     fetchData();
     super.initState();
   }
