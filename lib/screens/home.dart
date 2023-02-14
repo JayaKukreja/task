@@ -31,8 +31,10 @@ class _HomeState extends State<Home> {
     var response1 = await http.get(uri1);
     final json = jsonDecode(response.body);
     final json1 = jsonDecode(response1.body);
-    programs = json["items"];
-    lessons = json1["items"];
+    setState(() {
+      programs = json["items"];
+      lessons = json1["items"];
+    });
   }
 
   @override
@@ -90,6 +92,7 @@ class _HomeState extends State<Home> {
                       itemCount: programs.length,
                       itemBuilder: (context, index) {
                         final program = programs[index];
+                        print(program);
                         return Padding(
                           padding: EdgeInsets.only(right: 16.w),
                           child: Container(
