@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
             title: 'Task',
             theme: ThemeData(
               fontFamily: 'Inter',
-
               primarySwatch: Colors.blue,
             ),
             home: const Dashboard(),

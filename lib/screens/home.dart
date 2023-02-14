@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task/constants.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,6 +13,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<dynamic> programs = [];
+  List<dynamic> lessons = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchData();
+    super.initState();
+  }
+
+  fetchData() async {
+    Uri uri =
+        Uri.parse("https://632017e19f82827dcf24a655.mockapi.io/api/programs");
+    Uri uri1 =
+        Uri.parse("https://632017e19f82827dcf24a655.mockapi.io/api/lessons");
+    var response = await http.get(uri);
+    var response1 = await http.get(uri1);
+    final json = jsonDecode(response.body);
+    final json1 = jsonDecode(response1.body);
+    programs = json["items"];
+    lessons = json1["items"];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -21,7 +47,7 @@ class _HomeState extends State<Home> {
               height: 24.h,
             ),
             SizedBox(
-              height: 270.h,
+              height: 250.h,
               child: Column(
                 children: [
                   Row(
@@ -62,8 +88,9 @@ class _HomeState extends State<Home> {
                   Expanded(
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: programs.length,
                       itemBuilder: (context, index) {
+                        final program = programs[index];
                         return Padding(
                           padding: EdgeInsets.only(right: 16.w),
                           child: Container(
@@ -83,23 +110,30 @@ class _HomeState extends State<Home> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  path[index],
-                                  fit: BoxFit.cover,
-                                  height: 100.h,
-                                  width: 242.w,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(8.r),
+                                    topRight: Radius.circular(8.r),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/Frame 122.png",
+                                    fit: BoxFit.cover,
+                                    height: 100.h,
+                                    width: 242.w,
+                                  ),
                                 ),
-                                SizedBox(
-                                  height: 16.h,
-                                ),
+                                // SizedBox(
+                                //   height: 16.h,
+                                // ),
                                 Padding(
-                                  padding: EdgeInsets.only(left: 12.w),
+                                  padding:
+                                      EdgeInsets.only(left: 12.w, top: 16.h),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        title[index].toUpperCase(),
+                                        program["category"].toUpperCase(),
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 12.sp,
@@ -109,7 +143,7 @@ class _HomeState extends State<Home> {
                                         height: 8.h,
                                       ),
                                       Text(
-                                        description[index],
+                                        program["name"],
                                         style: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 16.sp,
@@ -119,7 +153,7 @@ class _HomeState extends State<Home> {
                                         height: 15.h,
                                       ),
                                       Text(
-                                        lessons[index],
+                                        "${program["lesson"]} lessons",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 12.sp,
@@ -304,127 +338,131 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 32.h,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    "Lessons for you",
+                    style: TextStyle(
+                        fontFamily: "Lora",
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontSize: 18.sp),
+                  ),
+                ),
+                Text(
+                  "View all",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: darkgrey,
+                      fontSize: 12.sp),
+                ),
+                SizedBox(
+                  width: 8.w,
+                ),
+                Padding(
+                    padding: EdgeInsets.only(right: 16.w),
+                    child: ImageIcon(
+                      const AssetImage("assets/images/Iconarrow.png"),
+                      color: darkgrey,
+                      size: 13.sp,
+                    ))
+              ],
+            ),
             SizedBox(
-              height: 280.h,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Lessons for you",
-                          style: TextStyle(
-                              fontFamily: "Lora",
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                              fontSize: 18.sp),
-                        ),
-                      ),
-                      Text(
-                        "View all",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: darkgrey,
-                            fontSize: 12.sp),
-                      ),
-                      SizedBox(
-                        width: 8.w,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(right: 16.w),
-                          child: ImageIcon(
-                            const AssetImage("assets/images/Iconarrow.png"),
-                            color: darkgrey,
-                            size: 13.sp,
-                          ))
-                    ],
-                  ),
-                  SizedBox(
-                    height: 24.h,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.only(right: 16.w),
-                          child: Container(
-                            width: 222.w,
-                            // height: 250.h,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(color: lightgrey),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color:
-                                          const Color.fromRGBO(14, 68, 62, .08),
-                                      blurRadius: 12.r)
-                                ]),
+              height: 24.h,
+            ),
+            SizedBox(
+              height: 255.h,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: lessons.length,
+                itemBuilder: (context, index) {
+                  final lesson = lessons[index];
+                  return Padding(
+                    padding: EdgeInsets.only(right: 16.w),
+                    child: Container(
+                      width: 222.w,
+                      // height: 250.h,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.r),
+                          border: Border.all(color: lightgrey),
+                          boxShadow: [
+                            BoxShadow(
+                                color: const Color.fromRGBO(14, 68, 62, .08),
+                                blurRadius: 12.r)
+                          ]),
+                      child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.start,
+                        // mainAxisSize: MainAxisSize.max,
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            "assets/images/exercise.png",
+                            // height: 150.h,
+                          ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 12.w),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  "assets/images/exercise.png",
+                                Text(
+                                  lesson["category"].toUpperCase(),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12.sp,
+                                      color: kblue),
                                 ),
                                 SizedBox(
-                                  height: 16.h,
+                                  height: 8.h,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 12.w),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Babycare".toUpperCase(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 12.sp,
-                                            color: kblue),
-                                      ),
-                                      SizedBox(
-                                        height: 8.h,
-                                      ),
-                                      Text(
-                                        "Understanding of human behaviour",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 16.sp,
-                                            color: Colors.black),
-                                      ),
-                                      SizedBox(
-                                        height: 15.h,
-                                      ),
-                                      Text(
-                                        "3 min",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 12.sp,
-                                            color: darkgrey),
-                                      )
-                                    ],
+                                SizedBox(
+                                  height: 50.h,
+                                  child: Text(
+                                    lesson["name"],
+                                    style: TextStyle(
+                                        overflow: TextOverflow.clip,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16.sp,
+                                        color: Colors.black),
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 8.w),
-                                  child: const Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: ImageIcon(
-                                        AssetImage("assets/images/lock.png")),
-                                  ),
+                                SizedBox(
+                                  height: 15.h,
+                                ),
+                                Text(
+                                  "${lesson["duration"]} min",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12.sp,
+                                      color: darkgrey),
                                 )
                               ],
                             ),
                           ),
-                        );
-                      },
-                      scrollDirection: Axis.horizontal,
+                          Visibility(
+                            visible: lesson["locked"],
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 8.w),
+                              child: const Align(
+                                alignment: Alignment.bottomRight,
+                                child: ImageIcon(
+                                    AssetImage("assets/images/lock.png")),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                  );
+                },
+                scrollDirection: Axis.horizontal,
               ),
             ),
             SizedBox(

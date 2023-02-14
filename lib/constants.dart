@@ -28,10 +28,4 @@ List<String> lessons = const [
   "16 lessons"
 ];
 
-List<String> path = const [
-  "assets/images/Frame 122.png",
-  "assets/images/Frame 123.png",
-  "assets/images/Frame 122.png",
-  "assets/images/Frame 123.png",
-  "assets/images/Frame 122.png"
-];
+
